@@ -10,6 +10,8 @@ let personas = [
 const express = require("express");
 const app = express();
 
+const port = process.env.PORT || 3000;
+
 app.use(express.json())
 
 
@@ -99,6 +101,6 @@ app.delete("/user/:id", (req,res) => {
     res.send("Usuario no encontrado")
 })
 
-app.listen(5000, ()=> {
-    console.log("Server on port 5000")
+app.listen(port, () => {
+    console.log("Server is running...")
 })

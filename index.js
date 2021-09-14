@@ -1,104 +1,138 @@
+let personajes = [
+    { id: 1, nombre: "Jon", apellido: "Snow" },
+    { id: 2, nombre: "Tyrion ", apellido: "Lannister" },
+    { id: 3, nombre: "Daenerys", apellido: "Targaryen" },
+    { id: 4, nombre: "Khal", apellido: "Drogo" },
+    { id: 5, nombre: "Robb", apellido: "Stark" }
+]
 
-let personas = [
-                {id: 1, nombre:"Jon", apellido:"Snow"},
-                {id: 2, nombre:"Tyrion ", apellido:"Lannister"}
-
-               ] 
-
-
-
+const { response } = require("express");
 const express = require("express");
-const app = express();
+const fs = require('fs')
 
+const app = express();
 const port = process.env.PORT || 3000;
 
-app.use(express.json())
+app.use(express.static("assets"));
+app.use(express.json()) 
 
 
-app.get("/user", (req,res) => {
-    let usuarios = "";
-    for(let i = 0; i < personas.length; i++) {
-       usuarios += `${personas[i].id} ${personas[i].nombre} ${personas[i].apellido} <br>`
-                 
-    }
-    res.send(usuarios)   
+app.get("/", (req, res) => {
+
+    res.redirect("/user");
 })
 
+app.get("/user", (req, res) => {
+    let usuarios = "";
+    for (let i = 0; i < personajes.length; i++) {
+        usuarios += `${personajes[i].id} ${personajes[i].nombre} ${personajes[i].apellido} <br>`
 
-app.get("/user/:id", (req,res) => {    
+    }  
+  
+    res.writeHead(200, { 'content-type': 'text/html' })
+    fs.createReadStream('characters.html').pipe(res)
+    res.write(`<span style="color:white;font-size:30px;font-family:monospace">${usuarios}<span>`)
+   
+
+
+})
+
+app.get("/user/:id", (req, res) => {
     let numeroId = parseInt(req.params.id)
-    for(let i = 0; i < personas.length; i++) {     
-        if(personas[i].id === numeroId) { // el id del elemento actual es igual al que me pasaron
-           return res.send(`${personas[i].id} ${personas[i].nombre} ${personas[i].apellido}`)                   
-        }        
+
+    for (let i = 0; i < personajes.length; i++) {
+        if (personajes[i].id === numeroId) {
+            res.writeHead(200, { 'content-type': 'text/html' })
+            fs.createReadStream('character.html').pipe(res)
+           return res.write(`<span style="color:white;font-size:30px;font-family:monospace">${personajes[i].id} ${personajes[i].nombre} ${personajes[i].apellido}<span>`)
+        
+        }
         
     }
-   
-        res.send("Usuario no encontrado")    
+    res.writeHead(200, { 'content-type': 'text/html' })
+    fs.createReadStream('character.html').pipe(res)
+    return  res.write(`<span style="color:white;font-size:30px;font-family:monospace">Personaje no encontrado<span>`)
+    
+
 
 })
 
 
-app.post("/user", (req,res) => {
+app.post("/user", (req, res) => {
+    let numero = personajes.length;
     // ((/[a-zA-Z]/).test(req.body.nombre)) chequea que el string tenga al menos una letra
-    if(req.body.id && req.body.nombre && req.body.apellido && (/[a-zA-Z]/).test(req.body.nombre) 
-        && (/[a-zA-Z]/).test(req.body.apellido) && Number.isInteger(req.body.id) 
-        && typeof(req.body.nombre) === "string" && typeof(req.body.apellido) === "string") {
-        for(let i = 0; i < personas.length; i++) {
-            if(personas[i].id === req.body.id) {
-              return res.send("El usuario ya existe")  
-              
-            }          
-           
+    if (req.body.nombre && req.body.apellido && (/[a-zA-Z]/).test(req.body.nombre)
+        && (/[a-zA-Z]/).test(req.body.apellido) && typeof (req.body.nombre) === "string" && typeof (req.body.apellido) === "string") {
+        for (let i = 0; i < personajes.length; i++) {
+            if (personajes[i].nombre === req.body.nombre && personajes[i].apellido === req.body.apellido 
+                || personajes[i].nombre ===  req.body.nombre.charAt(0).toUpperCase() +  
+                req.body.nombre.slice(1) && personajes[i].apellido === req.body.apellido.charAt(0).toUpperCase() +  req.body.apellido.slice(1) ) {
+                return res.send("El personaje ya existe")
+               
+
+            }
+
         }
-        personas.push(req.body)
-        res.send("Usuario agregado")
+        numero++;
+        req.body.nombre = req.body.nombre.charAt(0).toUpperCase() +  req.body.nombre.slice(1)
+        req.body.apellido = req.body.apellido.charAt(0).toUpperCase() +  req.body.apellido.slice(1)
+        personajes.push(req.body)
+        personajes[personajes.length - 1].id = numero
+        res.send("Personaje agregado")
     } else {
         res.send("Error al ingresar los datos")
     }
-   
+
 })
 
-app.patch("/user/:id", (req,res) => {
+app.patch("/user/:id", (req, res) => {
     let numeroId = parseInt(req.params.id)
-    for(let i = 0; i < personas.length; i++) {
-        if(personas[i].id === numeroId) {
-            if(req.body.nombre === "" || req.body.apellido === "") {
+    for (let i = 0; i < personajes.length; i++) {
+        if (personajes[i].id === numeroId) {
+            if (req.body.nombre === "" || req.body.apellido === "") {
                 return res.send("Error al ingresar los datos")
             }
 
-            if(req.body.nombre) {
-                personas[i].nombre = req.body.nombre                
-            } 
-            if(req.body.apellido) {               
-                personas[i].apellido = req.body.apellido               
+            if (req.body.nombre) {
+                personajes[i].nombre = req.body.nombre.charAt(0).toUpperCase() +  req.body.nombre.slice(1)
+        
+            }
+            if (req.body.apellido) {
+                personajes[i].apellido = req.body.apellido.charAt(0).toUpperCase() +  req.body.apellido.slice(1)
 
             }
 
-            
 
-            return res.send(`Usuario modificado: ${personas[i].nombre} ${personas[i].apellido}`)
-           
+
+            return res.send(`Personaje modificado: ${personajes[i].nombre} ${personajes[i].apellido}`)
+
 
         }
 
     }
-    res.send("Usuario no encontrado")
-    
+    res.send("Personaje no encontrado")
+
 })
 
-app.delete("/user/:id", (req,res) => {
+app.delete("/user/:id", (req, res) => {
     let numeroId = parseInt(req.params.id)
-    for(let i = 0; i < personas.length; i++) {        
-        if(personas[i].id === numeroId) {
-            let usuarioEliminado = `${personas[i].id} ${personas[i].nombre} ${personas[i].apellido}`
-            personas.splice(i, 1)                      
-            res.send(`Usuario ${usuarioEliminado} eliminado`)
-          
-            return;                 
-        }        
+    for (let i = 0; i < personajes.length; i++) {
+        if (personajes[i].id === numeroId) {
+            let usuarioEliminado = `${personajes[i].id} ${personajes[i].nombre} ${personajes[i].apellido}`
+            personajes.splice(i, 1)
+            res.send(`${usuarioEliminado} eliminado`)
+
+            return;
+        }
     }
-    res.send("Usuario no encontrado")
+    res.send("Personaje no encontrado")
+})
+
+app.get('*', (req, res) => {
+
+    res.writeHead(404, { 'content-type': 'text/html' })
+    fs.createReadStream('assets/404.html').pipe(res)
+
 })
 
 app.listen(port, () => {

@@ -18,8 +18,7 @@ Ejemplo de POST:
 **BODY**: 
 {
     "nombre": "Ned",
-    "apellido": "Stark",
-    "id": 6
+    "apellido": "Stark"
 }
 
 Ejemplo de PATCH:

@@ -58,23 +58,38 @@ app.get("/user/:id", (req, res) => {
 })
 
 
-app.post("/user", (req, res) => {
-    // ((/[a-zA-Z]/).test(req.body.nombre)) chequea que el string tenga al menos una letra
+app.post("/user", (req, res) => {  
+    // ((/[a-zA-Z]/).test(req.body.nombre)) chequea que el string tenga al menos una letra   
     if (req.body.nombre && req.body.apellido && (/[a-zA-Z]/).test(req.body.nombre)
         && (/[a-zA-Z]/).test(req.body.apellido) && typeof (req.body.nombre) === "string" && typeof (req.body.apellido) === "string") {
         for (let i = 0; i < personajes.length; i++) {
-            if (personajes[i].nombre === req.body.nombre && personajes[i].apellido === req.body.apellido 
-                || personajes[i].nombre ===  req.body.nombre.charAt(0).toUpperCase() +  
-                req.body.nombre.slice(1) && personajes[i].apellido === req.body.apellido.charAt(0).toUpperCase() +  req.body.apellido.slice(1) ) {
-                return res.send("El personaje ya existe")
-               
 
-            }
+            personajes[i].nombre = personajes[i].nombre.toUpperCase()
+            personajes[i].apellido = personajes[i].apellido.toUpperCase()
+            
+            req.body.nombre = req.body.nombre.toUpperCase()
+            req.body.apellido = req.body.apellido.toUpperCase()
+
+
+            if (personajes[i].nombre === req.body.nombre && personajes[i].apellido === req.body.apellido) {
+                return res.send("El personaje ya existe")  
+
+            } 
+
+            personajes[i].nombre = personajes[i].nombre.toLowerCase()
+            personajes[i].apellido = personajes[i].apellido.toLowerCase()
+
+            personajes[i].nombre = personajes[i].nombre.charAt(0).toUpperCase() +  personajes[i].nombre.slice(1)
+            personajes[i].apellido = personajes[i].apellido.charAt(0).toUpperCase() + personajes[i].apellido.slice(1)
 
         }
+        req.body.nombre = req.body.nombre.toLowerCase()
+        req.body.apellido = req.body.apellido.toLowerCase()
+
         req.body.nombre = req.body.nombre.charAt(0).toUpperCase() +  req.body.nombre.slice(1)
         req.body.apellido = req.body.apellido.charAt(0).toUpperCase() +  req.body.apellido.slice(1)
-        personajes.push(req.body)
+
+        personajes.push(req.body) 
         personajes[personajes.length - 1].id = personajes.length
         res.send("Personaje agregado")
     } else {
@@ -92,11 +107,18 @@ app.patch("/user/:id", (req, res) => {
             }
 
             if (req.body.nombre) {
-                personajes[i].nombre = req.body.nombre.charAt(0).toUpperCase() +  req.body.nombre.slice(1)
+                personajes[i].nombre = req.body.nombre
+                personajes[i].nombre = personajes[i].nombre.toLowerCase()
+                personajes[i].nombre = personajes[i].nombre.charAt(0).toUpperCase() +  personajes[i].nombre.slice(1)
+
         
             }
             if (req.body.apellido) {
-                personajes[i].apellido = req.body.apellido.charAt(0).toUpperCase() +  req.body.apellido.slice(1)
+                personajes[i].apellido = req.body.apellido
+                personajes[i].apellido = personajes[i].apellido.toLowerCase()
+                personajes[i].apellido = personajes[i].apellido.charAt(0).toUpperCase() + personajes[i].apellido.slice(1)
+
+
 
             }
 

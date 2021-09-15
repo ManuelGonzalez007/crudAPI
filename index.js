@@ -59,7 +59,6 @@ app.get("/user/:id", (req, res) => {
 
 
 app.post("/user", (req, res) => {
-    let numero = personajes.length;
     // ((/[a-zA-Z]/).test(req.body.nombre)) chequea que el string tenga al menos una letra
     if (req.body.nombre && req.body.apellido && (/[a-zA-Z]/).test(req.body.nombre)
         && (/[a-zA-Z]/).test(req.body.apellido) && typeof (req.body.nombre) === "string" && typeof (req.body.apellido) === "string") {
@@ -73,11 +72,10 @@ app.post("/user", (req, res) => {
             }
 
         }
-        numero++;
         req.body.nombre = req.body.nombre.charAt(0).toUpperCase() +  req.body.nombre.slice(1)
         req.body.apellido = req.body.apellido.charAt(0).toUpperCase() +  req.body.apellido.slice(1)
         personajes.push(req.body)
-        personajes[personajes.length - 1].id = numero
+        personajes[personajes.length - 1].id = personajes.length
         res.send("Personaje agregado")
     } else {
         res.send("Error al ingresar los datos")

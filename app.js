@@ -1,9 +1,9 @@
 let personajes = [
-    { id: 1, nombre: "Jon", apellido: "Snow" }, 
+    { id: 1, nombre: "Jon", apellido: "Snow" },  
     { id: 2, nombre: "Tyrion ", apellido: "Lannister" },
     { id: 3, nombre: "Daenerys", apellido: "Targaryen" },
     { id: 4, nombre: "Khal", apellido: "Drogo" },
-    { id: 5, nombre: "Robb", apellido: "Stark" }
+    { id: 5, nombre: "Robb", apellido: "Stark" } 
 ]
 
 const express = require("express");
@@ -111,19 +111,36 @@ app.patch("/user/:id", (req, res) => {
 
 app.delete("/user/:id", (req, res) => {
     let numeroId = parseInt(req.params.id)
+    let eliminado = false;
+    let usuarioEliminado = "";
+    let numeroDeUsuarioEliminado = 0; 
     if(isNaN(req.params.id)) {
         res.send("Error al ingresar los datos")
-        return
+        return 
     }
-    for (let i = 0; i < personajes.length; i++) {
+    for (let i = 0; i < personajes.length; i++) {        
         if (personajes[i].id === numeroId) {
-            let usuarioEliminado = `${personajes[i].id} ${personajes[i].nombre} ${personajes[i].apellido}`
-            personajes.splice(i, 1)
-            res.send(`${usuarioEliminado} eliminado`)
-            return;
+            eliminado = true;
+            usuarioEliminado = `${personajes[i].id} ${personajes[i].nombre} ${personajes[i].apellido}`
+            personajes.splice(i, 1)     
+            break;  
         } 
+        numeroDeUsuarioEliminado++; 
+    } 
+
+    if(eliminado) { 
+        for(let i = numeroDeUsuarioEliminado; i < personajes.length; i++) {
+            personajes[i].id =  personajes[i].id - 1
+        }
+
+        res.send(`${usuarioEliminado} eliminado`)  
+
+    } 
+
+    if(!eliminado) {
+        res.send("Personaje no encontrado") 
     }
-    res.send("Personaje no encontrado")
+ 
 })
 
 app.get('*', (req, res) => {

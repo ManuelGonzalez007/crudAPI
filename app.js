@@ -38,7 +38,7 @@ app.get("/user", (req, res) => {
 
 app.get("/user/:id", (req, res) => {
     if(isNaN(req.params.id)) {
-        res.render('home2', {layout: 'main2.hbs', usuario: ["Bad request"]})
+        res.render('home', {layout: 'main2.hbs', usuarios: ["Bad request"]})
         return
     }
     let numeroId = parseInt(req.params.id)
@@ -51,7 +51,7 @@ app.get("/user/:id", (req, res) => {
         
     }
     
-    res.render('home', {usuarios: ["Personaje no encontrado"]});
+    res.render('home', {layout: 'main2.hbs', usuarios: ["Personaje no encontrado"]});
 })
 
 
@@ -144,7 +144,7 @@ app.delete("/user/:id", (req, res) => {
 })
 
 app.get('*', (req, res) => {
-    res.render('home2', {layout: 'main2.hbs', usuario: ["Page Not Found"]})
+    res.render('home', {layout: 'main2.hbs', usuarios: ["Page Not Found"]})
 })
 
 app.listen(port, () => {

@@ -5,9 +5,8 @@ let personajes = [
     { id: 4, nombre: "Khal", apellido: "Drogo" },
     { id: 5, nombre: "Robb", apellido: "Stark" } 
 ]
-
+ 
 const express = require("express");
-const fs = require('fs')
 const exphbs = require('express-handlebars');
 const app = express();
 const port = process.env.PORT || 3000;
@@ -24,7 +23,6 @@ app.use(express.json())
 
 
 app.get("/", (req, res) => {
-
     res.redirect("/user");
 })
 
@@ -33,25 +31,26 @@ app.get("/user", (req, res) => {
     for (let i = 0; i < personajes.length; i++) {
         usuarios.push(`${personajes[i].nombre} ${personajes[i].apellido}`)        
     }  
-    res.render('home', {usuarios: usuarios});
+    res.render('usuarios', {usuarios: usuarios});
 })
 
 app.get("/user/:id", (req, res) => {
     if(isNaN(req.params.id)) {
-        res.render('home', {layout: 'main2.hbs', usuarios: ["Bad request"]})
+        res.status(400)
+        res.render('error', {layout: 'errores.hbs', mensaje: "Bad request"})
         return
     }
     let numeroId = parseInt(req.params.id)
 
     for (let i = 0; i < personajes.length; i++) {
         if (personajes[i].id === numeroId) {
-            res.render('home', {usuarios:[`${personajes[i].nombre} ${personajes[i].apellido}`]});
+            res.render('usuarios', {usuarios:[`${personajes[i].nombre} ${personajes[i].apellido}`]});
            return 
         }
         
     }
     
-    res.render('home', {layout: 'main2.hbs', usuarios: ["Personaje no encontrado"]});
+    res.render('error', {layout: 'errores.hbs', mensaje: "Personaje no encontrado"});
 })
 
 
@@ -79,6 +78,7 @@ app.post("/user", (req, res) => {
         personajes[personajes.length - 1].id = personajes.length
         res.send("Personaje agregado")
     } else {
+        res.status(400)
         res.send("Error al ingresar los datos") 
     }
 })
@@ -88,6 +88,7 @@ app.patch("/user/:id", (req, res) => {
     for (let i = 0; i < personajes.length; i++) {
         if (personajes[i].id === numeroId) {
             if (isNaN(req.params.id) || req.body.nombre === "" || req.body.apellido === "") {
+                res.status(400)
                 return res.send("Error al ingresar los datos")
             }
 
@@ -115,6 +116,7 @@ app.delete("/user/:id", (req, res) => {
     let usuarioEliminado = "";
     let numeroDeUsuarioEliminado = 0; 
     if(isNaN(req.params.id)) {
+        res.status(400)
         res.send("Error al ingresar los datos")
         return 
     }
@@ -127,7 +129,7 @@ app.delete("/user/:id", (req, res) => {
         } 
         numeroDeUsuarioEliminado++; 
     } 
-
+ 
     if(eliminado) { 
         for(let i = numeroDeUsuarioEliminado; i < personajes.length; i++) {
             personajes[i].id =  personajes[i].id - 1
@@ -141,10 +143,11 @@ app.delete("/user/:id", (req, res) => {
         res.send("Personaje no encontrado") 
     }
  
-})
+}) 
 
 app.get('*', (req, res) => {
-    res.render('home', {layout: 'main2.hbs', usuarios: ["Page Not Found"]})
+  res.status(404)
+  res.render('error', {layout: 'errores.hbs', mensaje: "Page Not Found"})
 })
 
 app.listen(port, () => {

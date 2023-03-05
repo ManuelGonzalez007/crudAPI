@@ -5,7 +5,7 @@ Permite acceder y modificar una base de datos ficticia, simulada a traves de un 
 
 Pueden verla funcionando en el siguiente link: https://crud-got-api.onrender.com/user
 
-A traves del navegador, podes acceder a la lista de personajes: https://crudapi01.herokuapp.com/user (migración pendiente)
+A traves del navegador, podes acceder a la lista de personajes: https://crud-got-api.onrender.com/user 
 
 Además podemos agregar el correspondiente id para ver solo un elemento de la lista: https://crudapi01.herokuapp.com/user/1
 

@@ -3,7 +3,7 @@ Es una aplicacion CRUD creada a partir de Node.js y Express.js.
 
 Permite acceder y modificar una base de datos ficticia, simulada a traves de un array, de personajes de Game of Thrones
 
-Pueden verla funcionando en el siguiente link: PENDIENTE
+Pueden verla funcionando en el siguiente link: https://crud-got-api.onrender.com/user
 
 A traves del navegador, podes acceder a la lista de personajes: https://crudapi01.herokuapp.com/user (migración pendiente)
 

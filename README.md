@@ -7,14 +7,14 @@ Pueden verla funcionando en el siguiente link: https://crud-got-api.onrender.com
 
 A traves del navegador, podes acceder a la lista de personajes: https://crud-got-api.onrender.com/user 
 
-Además podemos agregar el correspondiente id para ver solo un elemento de la lista: https://crudapi01.herokuapp.com/user/1
+Además podemos agregar el correspondiente id para ver solo un elemento de la lista:https://crud-got-api.onrender.com/user/1
 
 Utilizando Postman podemos llamar al metodo POST para agregar personajes, PATCH para editar y DELETE para quitar algún elemento.
 
 Ejemplo de POST:
 
 **Method**: POST,
-**URL**: https://crudapi01.herokuapp.com/user,
+**URL**: https://crud-got-api.onrender.com/user,
 **BODY**: 
 {
     "nombre": "Ned",
@@ -24,7 +24,7 @@ Ejemplo de POST:
 Ejemplo de PATCH:
 
 **Method**: PATCH,
-**URL**: https://crudapi01.herokuapp.com/user/6,
+**URL**:https://crud-got-api.onrender.com/user/6,
 **BODY**: 
 {
     "nombre": "Eddard"
@@ -33,7 +33,7 @@ Ejemplo de PATCH:
 Ejemplo de DELETE:
 
 **Method**: DELETE,
-**URL**: https://crudapi01.herokuapp.com/user/6
+**URL**:https://crud-got-api.onrender.com/user/6
 
 
 
